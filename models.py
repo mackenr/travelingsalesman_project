@@ -1,6 +1,9 @@
 
 from __future__ import division
 
+import string
+from itertools import chain
+
 import os
 import sys
 from time import sleep
@@ -30,7 +33,7 @@ import time
 import seaborn as sns
 
 
-
+from scipy.special import gamma
 import plotly.express as px
 import geopandas as gpd
 import shapely
@@ -41,11 +44,221 @@ from math import radians, cos, sin, asin, sqrt, factorial
 
 
 
-from sympy import symbols, sympify
-from sympy.plotting import plot
 
-from sympy import S, I, pi, gamma
-from sympy.abc import x
+def generator():
+    ''' Run this if you need to generate all the pngs listed'''
+
+    listtoindex=list(range(3,12,1))
+    listtoadd=list(range(12,66,6))
+    listtoindex.extend(listtoadd)
+   
+    
+
+    for i in listtoindex:
+
+        a=geneticAlgorithm_with_Plot(n=i,popSize=100, eliteSize=20, mutationRate=0.01, generations=int(750),show=False)
+        bestRoutedist(a,i)
+       
+    
+    
+
+
+
+codeupmaps=[
+'Code_Up_TSP_Simulation_n3.png',
+'Code_Up_TSP_Simulation_n4.png',
+'Code_Up_TSP_Simulation_n5.png',
+'Code_Up_TSP_Simulation_n6.png',
+'Code_Up_TSP_Simulation_n7.png',
+'Code_Up_TSP_Simulation_n8.png',
+'Code_Up_TSP_Simulation_n9.png',
+'Code_Up_TSP_Simulation_n10.png',
+'Code_Up_TSP_Simulation_n11.png',
+'Code_Up_TSP_Simulation_n12.png',
+'Code_Up_TSP_Simulation_n15.png',
+'Code_Up_TSP_Simulation_n18.png',
+'Code_Up_TSP_Simulation_n24.png',
+'Code_Up_TSP_Simulation_n30.png',
+'Code_Up_TSP_Simulation_n36.png',
+'Code_Up_TSP_Simulation_n42.png',
+'Code_Up_TSP_Simulation_n48.png',
+'Code_Up_TSP_Simulation_n54.png',
+'Code_Up_TSP_Simulation_n60.png']
+
+
+geneticAlgorithmperfomancegraphs=[
+'GeneticAlgoPlot_TSP_3.png',
+'GeneticAlgoPlot_TSP_4.png',
+'GeneticAlgoPlot_TSP_5.png',
+'GeneticAlgoPlot_TSP_6.png',
+'GeneticAlgoPlot_TSP_7.png',
+'GeneticAlgoPlot_TSP_8.png',
+'GeneticAlgoPlot_TSP_9.png',
+'GeneticAlgoPlot_TSP_10.png',
+'GeneticAlgoPlot_TSP_11.png',
+'GeneticAlgoPlot_TSP_12.png',
+'GeneticAlgoPlot_TSP_15.png',
+'GeneticAlgoPlot_TSP_18.png',
+'GeneticAlgoPlot_TSP_24.png',
+'GeneticAlgoPlot_TSP_30.png',
+'GeneticAlgoPlot_TSP_36.png',
+'GeneticAlgoPlot_TSP_42.png',
+'GeneticAlgoPlot_TSP_48.png',
+'GeneticAlgoPlot_TSP_54.png',
+'GeneticAlgoPlot_TSP_60.png']
+images=[]
+# images = list(chain(*zip(codeupmaps,geneticAlgorithmperfomancegraphs)))
+images.extend(codeupmaps)
+images.extend(geneticAlgorithmperfomancegraphs)
+indexs=[i for i in range(len([3, 4, 5, 6, 7, 8, 9, 10, 11, 12,15, 18, 24, 30, 36, 42, 48, 54, 60]))]
+dictforindexs=dict(zip([3, 4, 5, 6, 7, 8, 9, 10, 11, 12,15, 18, 24, 30, 36, 42, 48, 54, 60],indexs))
+
+
+
+def TSPresultsfastViz(n=18):
+    s=.15
+    print("Montage Music")
+    sleep(.5)
+    clear_output()
+    sleep(.5)
+   
+    for image in images:
+          
+        display(Image(filename=image))
+        sleep(s)
+        clear_output()
+
+def TSPFocusedViz(n):
+    n=dictforindexs.get(n)
+
+    display(Image(filename=codeupmaps[n]))
+    display(Image(filename=geneticAlgorithmperfomancegraphs[n]))
+
+
+
+
+
+
+
+
+
+
+def prRed(skk): print("\033[91m {}\033[00m" .format(skk))
+ 
+ 
+def prGreen(skk): print("\033[92m {}\033[00m" .format(skk))
+ 
+ 
+def prYellow(skk): print("\033[93m {}\033[00m" .format(skk))
+ 
+ 
+def prLightPurple(skk): print("\033[94m {}\033[00m" .format(skk))
+ 
+ 
+def prPurple(skk): print("\033[95m {}\033[00m" .format(skk))
+ 
+ 
+def prCyan(skk): print("\033[96m {}\033[00m" .format(skk))
+ 
+ 
+def prLightGray(skk): print("\033[97m {}\033[00m" .format(skk))
+ 
+ 
+def prBlack(skk): print("\033[98m {}\033[00m" .format(skk))
+
+
+
+
+
+def f1(x):
+    return (0*x)+1
+label1= '$O(1)$'
+
+def f2(x):
+    return np.log(x) 
+label2= '$O(log n)$'
+
+def f3(x):
+    return x
+label3= '$O(n)$'
+
+def f4(x):
+    return  x*np.log(x) 
+label4= '$O(n \\ log \\ n)$'
+
+def f5(x):
+    return x**2
+label5= '$O(n^2)$'
+
+def f6(x):
+    return 2**x
+label6= '$O(2^n)$'
+
+
+label7= '$O(n!)$'
+
+def f8(x):
+    return x**x
+label8= '$O(n^n)$'
+
+def bigOplot(xmax=15):
+    x=np.linspace(0,xmax*1.25,1000)
+    x1=np.linspace(1,xmax*1.25,1000)
+    ymax=(xmax**xmax)+xmax*xmax
+    
+    fig = plt.figure(figsize=(5,5)) 
+    ax=fig.add_subplot(1,1,1)
+
+
+    ax.plot(x,f1(x),'lime',label=label1)
+    ax.plot(x,f2(x1),'peru',label=label2)
+    ax.plot(x,f3(x),'crimson',label=label3)
+    ax.plot(x,f4(x1),'gold',label=label4)
+    ax.plot(x,f5(x),'navy',label=label5)
+    ax.plot(x,f6(x),'c',label=label6)
+    ax.plot(x,gamma(x),'w',label=label7)
+    ax.plot(x,f8(x),'purple',label=label8)
+    ax.set_title('$Big$ $O$ $Notation$')
+    ax.set_xlabel('$Elements$')
+    ax.set_ylabel('$Operations$')
+    ax.legend(loc='upper right')
+    ax.set_ylim(0,ymax)
+    return plt.show()
+
+
+
+def bigOfactplot(xmax=100):
+    x=np.linspace(0,xmax*1.25,100000)
+    ymax=float(gamma(xmax+1)+10)
+  
+    
+    fig = plt.figure(figsize=(7,7)) 
+    ax=fig.add_subplot(1,1,1)
+
+
+   
+    ax.plot(x,gamma(x),'crimson',label=label7)
+  
+    ax.set_title('$Big$ $O$ $Notation$')
+    ax.set_xlabel('$Elements$')
+    ax.set_ylabel('$Operations$')
+    ax.legend(loc='upper right')
+    ax.set_ylim(0,ymax)
+    ax.set_xlim(0,xmax+15)
+    return plt.show()
+
+def bigObigscale():
+    print('Small scale big O plot\n. ')
+    bigOplot(xmax=10)
+    sleep(1.75)
+    clear_output()
+    # print('Larger Scale \n')
+    # bigOplot(xmax=20)
+    # sleep(1.75)
+    # clear_output()
+    print('To highlight the our problem we look at f(60) when f(n)=n! \n We see at this larger scale we see magnitude of O(n!) as its curve becomes virtually asymptotic!.')
+    bigOfactplot(xmax=60)
+   
 
 
 
@@ -54,35 +267,152 @@ from sympy.abc import x
 
 def showfactorials():
     n=list(range(0,125,5))
-   
-    x = symbols('x',integer=True)
+    
 
-    plot(gamma(x), show=True,xlim=(0,15))
+
+
+    intervals='Let us begin. Observe how aggressively the rate O(n!) increases \nWe compute f(n!) from 0 to 125 at intervals of 5:\n'
    
-    sleep(15)
+
+
+    for char in intervals:
+            sleep(0.009)
+            print(char, end='', flush=True)
+
+    sleep(3)
     clear_output()
-    print('Now we show 0 to 125 at intervals of 5:\n')
-    sleep(5)
+
+   
+    countdown=['3\n','2\n','1\n','GO!!!\n\n\n']
+    
+
+    for char in countdown:
+        sleep(0.15)
+        print(char, end='', flush=False)
+        sleep(0.15)
+
+    sleep(.25)
+
     clear_output()
+    print('\n\n')
+      
 
 
 
     for i in n:
-        h=f'{factorial(i)}'
-        print('\n')
+        h=f'{factorial(i)}\n'
+        
         for char in h:
-            sleep(0.0009)
+            sleep(0.0001)
             print(char, end='', flush=True)
             
+    sleep(1.5)
+    clear_output()
+    sleep(.5)
+
+
+    highligthyper='\033[92m "optimizing decision trees and hyperparameter optimization"'
+            
+    motivation=f'''
+    First we consider the limitations of time complexity recall "big O" notation O(n):
+    
+    Solving things by "brute force" is often impossible or at least impractical. Many problems can be
+    reduced to permutations however permutations are of the order O(n!).
+    We will find a way around this by exploring a decievingly simply problem,a classic problem in mathematics called the traveling salesman problem (TSP).    
+
+    From the wikipedia article:
+
+    "An exact solution for 15,112 German towns from TSPLIB was found in 2001 using the cutting-plane method proposed by George Dantzig,
+    Ray Fulkerson, and Selmer M. Johnson in 1954, based on linear programming. The computations were performed on a network of 110 processors located
+    at Rice University and Princeton University. The total computation time was equivalent to 22.6 years on a single 500 MHz Alpha processor.
+    In May 2004, the travelling salesman problem of visiting all 24,978 towns in Sweden was solved: a tour of length approximately 72,500 kilometres
+    was found and it was proven that no shorter tour exists.[26] 
+    In March 2005, the travelling salesman problem of visiting all 33,810 points in a circuit board was solved using
+    Concorde TSP Solver: a tour of length 66,048,945 units was found and it was proven that no shorter tour exists. 
+    The computation took approximately 15.7 CPU-years (Cook et al. 2006). In April 2006 an instance with 85,900 points was solved using Concorde TSP Solver, 
+    taking over 136 CPU-years, see Applegate et al. (2006)."
+    
+
+   To solve our far simpler TSP, will be using the so called "genetic algorithm". This is based directly on Dawin's theory of evolution.
+   This evolution is both a strength and weakness of the algorithm
+   
+   In short this tool is very dynamic and faster than many "brute force" methods. It will give us a "good enough" answer which is useful
+   when turn around time is short or when you need or  simply to get a general direction to focus on when you are otherwise lost in a complex problem. 
+
+
+
+    From the wikipedia article:
+
+    "In computer science and operations research, a genetic algorithm (GA) is a metaheuristic inspired by the process of natural selection that belongs 
+    to the larger class of evolutionary algorithms (EA). Genetic algorithms are commonly used to generate high-quality solutions to optimization and search problems 
+    by relying on biologically inspired operators such as mutation, crossover and selection.[1] Some examples of GA applications include optimizing decision trees for better performance, 
+    solving sudoku puzzles,[2] hyperparameter optimization, etc."
+    
+    The sharp eyed among you will note a common use is {highligthyper}
+    
+    '''
+
+    
+    s=.009
+    lastwords=(' - a very interesting tool indeed.')
+
+    for char in motivation:
+           
+            sleep(s)
+            print(char, end='', flush=True)
+
+    
+    sleep(.75)
+
+    prLightGray('')
+
+    sleep(.75)
+
+    for char in lastwords:
+           
+            sleep(s)
+            print(char, end='', flush=True)
+           
+
+def theMainShow():
+    slidebreaks()     
+    showfactorials()
+    slidebreaks()
+    bigObigscale()   
+    TSPresultsfastViz()
+    slidebreaks()
+    TSPFocusedViz(n=18)
+    slidebreaks()
+    print('\nThank you\n') 
+
+
+
+def slidebreaks():
+    sleep(.5) 
+ 
+    print('\n\n-[Press any key to proceed]-\n')
+    x = input()
+    clear_output()
+    sleep(.5)   
+
+    
+
+  
+
+
+  
+    
+   
+    
    
    
    
+   
 
 
 
 
-
-
+##### The real code #############
 
 
 
@@ -159,20 +489,20 @@ def nearoptimalcircuit(bestroute):
     path=[]  
 
 
-    rangeforloop=list(range(1,len(bestroute)))
+    rangeforloop=list(range(0,len(bestroute)-1))
     if len(bestroute)%2!=0:
         for i in rangeforloop:
             subline=[]
             if i==1:
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 ax.plot(x1,y1,color="green", marker="o")
                 ax.plot([x1,x2],[y1,y2],color="green",   linestyle=":")
             elif i==rangeforloop[-1]:
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 x3=bestroute[0].x
@@ -184,8 +514,8 @@ def nearoptimalcircuit(bestroute):
                 ax.plot(x3,y3,color="red", marker="x")
 
             elif i%2==0:               
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 ax.plot([x1,x2],[y1,y2],color="white",marker='o'  ,linestyle=":")
@@ -193,8 +523,8 @@ def nearoptimalcircuit(bestroute):
                 # y.append(y1)
                 # path.append(i)
             else:
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 ax.plot([x1,x2],[y1,y2],color="blue",  linestyle=":")
@@ -205,15 +535,15 @@ def nearoptimalcircuit(bestroute):
         for i in rangeforloop:
             subline=[]
             if i==1:
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 ax.plot(x1,y1,color="green", marker="o")
                 ax.plot([x1,x2],[y1,y2],color="green",   linestyle=":")
             elif i==rangeforloop[-1]:
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 x3=bestroute[0].x
@@ -225,8 +555,8 @@ def nearoptimalcircuit(bestroute):
                 ax.plot(x3,y3,color="red", marker="x")
 
             elif i%2!=0:               
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 ax.plot([x1,x2],[y1,y2],color="white",marker='o'  ,linestyle=":")
@@ -234,8 +564,8 @@ def nearoptimalcircuit(bestroute):
                 # y.append(y1)
                 # path.append(i)
             else:
-                x1=bestroute[i-1].x
-                y1=bestroute[i-1].y
+                x1=bestroute[i+1].x
+                y1=bestroute[i+1].y
                 x2=bestroute[i].x
                 y2=bestroute[i].y
                 ax.plot([x1,x2],[y1,y2],color="blue",  linestyle=":")       
@@ -353,22 +683,53 @@ def initialPopulation(popSize, latlonglist):
         route=createRoute(latlonglist)
         
         population.append(route)
-    dist=[]
-
    
-    for i in range(1,len(population)-1):
-        x1=population[i][0].x
-        x2=population[i-1][0].x
-        y1=population[i][1].y
-        y2=population[i-1][1].y
-        dist.append((((x1-x2)**2)+((x1-x2)**2))**.5)
-    return population,dist
+
+    # df=pd.DataFrame(dist)
+    # print(f'this is the shape of ipop dist{df.shape}')
+    return population
 
 
+def gendf(pop,n):
+    '''
+    This function reads in zillow data from Codeup database, writes data to
+    a csv file if a local file does not exist, and returns a df.
+    '''
+    if os.path.isfile(f'n_{n}pop.csv'):
+        
+        # If csv file exists read in data from csv file.
+        df = pd.read_csv(f'n_{n}pop.csv',index_col=0)
+       
+        pop=pd.DataFrame(pop)
+        if len(pop)==len(df):
+            df.join(pop,how='outer')
+            df.to_csv(f'n_{n}pop.csv')
+        else:
+            pop=pop.T
+            df.join(pop,how='outer')
+            df.to_csv(f'n_{n}pop.csv')
 
+       
+        
+    else:
+        
+        df=pd.DataFrame(pop)
+        df=df.T
+        df.to_csv(f'n_{n}pop.csv')
+    
+        
+        
+        
+    
+    
+        
+
+    
 
     
 def rankRoutes(population):
+    # gendf(population)
+  
     fitnessResults = {}
     for i in range(0,len(population)):
         fitnessResults[i] = Fitness(population[i]).routeFitness()
@@ -425,6 +786,13 @@ def breedPopulation(matingpool, eliteSize):
         child = breed(pool[i], pool[len(matingpool)-i-1])
         children.append(child)
     return children
+
+
+
+
+
+
+
 def mutate(individual, mutationRate):
     for swapped in range(len(individual)):
         if(random.random() < mutationRate):
@@ -436,6 +804,13 @@ def mutate(individual, mutationRate):
             individual[swapped] = city2
             individual[swapWith] = city1
     return individual
+
+
+
+
+
+
+
 def mutatePopulation(population, mutationRate):
     mutatedPop = []
     
@@ -445,23 +820,34 @@ def mutatePopulation(population, mutationRate):
     return mutatedPop
 
 
+
+
+
+
+
+
+
 def nextGeneration(currentGen, eliteSize, mutationRate):
     popRanked = rankRoutes(currentGen)
     selectionResults = selection(popRanked, eliteSize)
     matingpool = matingPool(currentGen, selectionResults)
     children = breedPopulation(matingpool, eliteSize)
     nextGeneration = mutatePopulation(children, mutationRate)
-    dist=[]
+   
 
-    for a in range(0,len(nextGeneration)):
-        for b in range(0,len(nextGeneration[a])):
-            for i in range(1,len(nextGeneration)-1):
-                x1=nextGeneration[i][0].x
-                x2=nextGeneration[i-1][0].x
-                y1=nextGeneration[i][1].y
-                y2=nextGeneration[i-1][1].y
-                dist.append((((x1-x2)**2)+((x1-x2)**2))**.5)
-    return nextGeneration,dist    
+
+  
+   
+    # df=pd.DataFrame(dist)
+    # print(f'this is the shape of nextgen dist{df.shape}')
+    return nextGeneration    
+
+
+
+
+
+
+
 def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations):
     pop = initialPopulation(popSize, population)
     print("Initial distance: " + f'{(1 / rankRoutes(pop)[0][1]):.2g}')
@@ -476,23 +862,6 @@ def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations):
 
 
     
-
-    
-# def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generations):
-#     pop = initialPopulation(popSize, population)
-#     progress = []
-#     progress.append(1 / rankRoutes(pop)[0][1])
-    
-#     for i in range(0, generations):
-#         pop = nextGeneration(pop, eliteSize, mutationRate)
-#         progress.append(1 / rankRoutes(pop)[0][1])
-    
-#     plt.plot(progress)
-#     plt.ylabel('Distance')
-#     plt.xlabel('Generation')
-#     plt.savefig(fname=f'GeneticAlgoPlot_TSP_{len(population)}.png' ,dpi='figure',format='png')
-  
-#     plt.show()
 
 
 
@@ -521,11 +890,11 @@ def plotyTSPoutput(compdf,show):
     geo_df= geo_df.set_crs(4326)
     codeupgeo=shapely.geometry.Point( -98.4895,29.42697)
     fig1 = go.Figure(go.Scattermapbox())
-    for i in range(1,len(geo_df)):
+    for i in range(0,len(geo_df)-1):
         # x1=geo_df.geometry[i-2].x
         # y1=geo_df.geometry[i-2].y  
-        x2=geo_df.geometry[i-1].x
-        y2=geo_df.geometry[i-1].y
+        x2=geo_df.geometry[i+1].x
+        y2=geo_df.geometry[i+1].y
         x3=geo_df.geometry[i].x
         y3=geo_df.geometry[i].y   
         fig1.add_trace(go.Scattermapbox(
@@ -587,29 +956,34 @@ def plotyTSPoutput(compdf,show):
 
 def geneticAlgorithmProgressPlot(population,popSize, eliteSize, mutationRate, generations,show):
     fig = plt.figure(figsize=(15,15))
+    n=len(population)
     ax = host_subplot(111, axes_class=AA.Axes)
     ax.autoscale()
     ax.margins(0.1)
 
     st = time.time()
-    dist=[]
-    pop,d1 = initialPopulation(popSize, population)
-    dist.append(d1)
+   
+    pop=initialPopulation(popSize, population)
+    gendf(pop,n)
+
     popdf=[]
     popdf.append(pop)
+    # df=pd.DataFrame(popdf)
+    # print(f'this is the shape of 1st pop df after ip in genproplt{df.shape}')
 
     idist=("Initial distance: " + f'{(1 / rankRoutes(pop)[0][1]):.2g}\n')
     progress = []
     progress.append(1 / rankRoutes(pop)[0][1])
     
     for i in range(0, generations):
-        pop,d2 = nextGeneration(pop, eliteSize, mutationRate)
-        pd.DataFrame(pop)
+        pop= nextGeneration(pop, eliteSize, mutationRate)
+        gendf(pop,n)
         popdf.append(pop)
         progress.append(1 / rankRoutes(pop)[0][1])
-        dist.append(d2)
-    
+       
     fdist=("Final distance: " + f'{(1 / rankRoutes(pop)[0][1]):.2g}\n')
+    # df=pd.DataFrame(popdf)
+    # print(f'this is the shape of 1st pop dist inside genAlgPlot after adding gens dist{df.shape}')
      
     bestRouteIndex = rankRoutes(pop)[0][0]
     bestRoute = pop[bestRouteIndex]
@@ -632,7 +1006,7 @@ def geneticAlgorithmProgressPlot(population,popSize, eliteSize, mutationRate, ge
     # popdf=pd.DataFrame(popdf)
     # progressdf=pd.DataFrame(progress)
 
-    return bestRoute,dist
+    return bestRoute
 
 
 
@@ -644,7 +1018,7 @@ def geneticAlgorithm_with_Plot(n, popSize, eliteSize, mutationRate, generations,
     
     
    
-    bestRoute,dist=geneticAlgorithmProgressPlot(population,popSize, eliteSize, mutationRate, generations,show)
+    bestRoute=geneticAlgorithmProgressPlot(population,popSize, eliteSize, mutationRate, generations,show)
    
   
     if show== True:
@@ -666,14 +1040,138 @@ def geneticAlgorithm_with_Plot(n, popSize, eliteSize, mutationRate, generations,
    
 
 
-    return bestRoute,dist
+    return bestRoute
 
 
 
 
 
 
+def strtuppletotuupple(col):
+    for i in range(0,len(col)):
+        a=(col[i]).replace('(','').replace(')','').split(',')
+        a[0]=float(a[0])
+        a[1]=float(a[1])
+        col[i]=a
+    return col
+
+def strtuppletotuuppleouter(df):
+    newdf=pd.DataFrame()
+    cols=df.columns.to_list()
+
+    for c in cols:
+        col=df[c]
+        col=strtuppletotuupple(col)
+        newdf[f'{c}']=pd.Series(col)
+    return newdf
+
+
+def latlongtodis(df):
+    cols=df.columns.to_list()
+    bigdisdf=pd.DataFrame()
+    for i in cols:
+        disdf=pd.DataFrame()
+        col=df[i]
+        distcol=[]
+        for c in range(1,len(col)):
+            x1=col[c-1][0]
+            x2=col[c][0]
+            y1=col[c-1][1]
+            y2=col[c][1]
+            dist=((x1-x2)**2+(y1-y2)**2)**(.5)
+            distcol.append(dist)
+        dista=pd.DataFrame(distcol)
+        disdf=pd.concat([dista,disdf],axis=1)
+        bigdisdf=pd.concat([disdf,bigdisdf],axis=1)
+    return bigdisdf
+
+
+def latlongstringtouppletoeucliddist(df):
+    
+    da=strtuppletotuuppleouter(df)
+    db=latlongtodis(da)
+    return db
 
 
 
     
+def bestRoutedist(bestRoute,n):
+   
+   
+    df=pd.DataFrame(bestRoute)
+    df.to_csv(f'n_{n}bestroute.csv')
+
+    return 
+    
+
+
+
+
+def popandbestcsv(n):
+    df = pd.read_csv(f'n_{n}pop.csv', index_col=0)
+    bestroute = pd.read_csv(f'n_{n}bestroute.csv', index_col=0)
+
+
+    dist=latlongstringtouppletoeucliddist(df)
+
+
+    total_mean=dist.mean(axis=0)
+    total_var=dist.var(axis=0)
+    total_skew=dist.skew(axis=0)
+    total_kurtosis=dist.kurtosis(axis=0)
+    total_sum=dist.sum(axis=0)
+
+
+
+    statsuff=[total_mean,total_var,total_skew,total_kurtosis,total_sum]
+   
+    df=pd.concat(statsuff,axis=1)
+
+
+    columns=['mean','var','kurt','skew','sum']
+    colnums=list(range(len(columns)))
+    colmap=dict(zip(colnums,columns))
+    statdf=df.rename(columns=colmap)
+
+
+
+    comparesum=statdf['sum'].aggregate(['min','max','mean'])
+    return statdf,comparesum,bestroute
+    
+
+def bestdist(best):
+
+    best=best['0']
+    xs=[]
+    ys=[]
+
+    best=[(i.replace('(','').replace(')','').replace("'",'').split(',')) for i in best]
+    b=best
+    bestdist=[]
+    for i in range(1,len(best)):
+        x1=b[i][0]
+        x2=b[i-1][0]
+        y1=b[i][1]
+        y2=b[i-1][1]
+        x1=float(x1)
+        x2=float(x2)
+        y1=float(y1)
+        y2=float(y2)
+
+        dist=(((x1-x2)**2)+((y1-y2)**2))**.5
+        bestdist.append(dist)
+
+
+    
+    euclidieanbesttotal=sum(bestdist)
+    return euclidieanbesttotal
+
+
+
+def focusedforreport(n):
+    stats,comp,bestroute=popandbestcsv(n)
+    TSPFocusedViz(n)
+    besd=latlongstringtouppletoeucliddist(bestroute)
+    # besd=bestdist(bestroute)
+   
+    return stats,comp,besd
