@@ -25,7 +25,7 @@ import mpl_toolkits.axisartist as AA
 from matplotlib import collections  as mc
 
 
-from itertools import permutations
+from itertools import permutations,combinations
 
 from matplotlib_scalebar.scalebar import ScaleBar
 
@@ -38,15 +38,18 @@ import plotly.express as px
 import geopandas as gpd
 import shapely
 import numpy as np
+from sympy import symbols
+
 import wget
 
 from math import radians, cos, sin, asin, sqrt, factorial
 
-
+import scipy.stats as stats
 
 
 def generator():
-    ''' Run this if you need to generate all the pngs listed'''
+    ''' This is what you must run to aquire data. The nature of the algorithm is going to create differeing results everytime becasue of the mutation rates. This allows you to recreate the process
+    '''
 
     listtoindex=list(range(3,12,1))
     listtoadd=list(range(12,66,6))
@@ -75,7 +78,6 @@ codeupmaps=[
 'Code_Up_TSP_Simulation_n10.png',
 'Code_Up_TSP_Simulation_n11.png',
 'Code_Up_TSP_Simulation_n12.png',
-'Code_Up_TSP_Simulation_n15.png',
 'Code_Up_TSP_Simulation_n18.png',
 'Code_Up_TSP_Simulation_n24.png',
 'Code_Up_TSP_Simulation_n30.png',
@@ -97,7 +99,6 @@ geneticAlgorithmperfomancegraphs=[
 'GeneticAlgoPlot_TSP_10.png',
 'GeneticAlgoPlot_TSP_11.png',
 'GeneticAlgoPlot_TSP_12.png',
-'GeneticAlgoPlot_TSP_15.png',
 'GeneticAlgoPlot_TSP_18.png',
 'GeneticAlgoPlot_TSP_24.png',
 'GeneticAlgoPlot_TSP_30.png',
@@ -110,15 +111,15 @@ images=[]
 # images = list(chain(*zip(codeupmaps,geneticAlgorithmperfomancegraphs)))
 images.extend(codeupmaps)
 images.extend(geneticAlgorithmperfomancegraphs)
-indexs=[i for i in range(len([3, 4, 5, 6, 7, 8, 9, 10, 11, 12,15, 18, 24, 30, 36, 42, 48, 54, 60]))]
-dictforindexs=dict(zip([3, 4, 5, 6, 7, 8, 9, 10, 11, 12,15, 18, 24, 30, 36, 42, 48, 54, 60],indexs))
+indexs=[i for i in range(len([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 18, 24, 30, 36, 42, 48, 54, 60]))]
+dictforindexs=dict(zip([3, 4, 5, 6, 7, 8, 9, 10, 11, 12,18, 24, 30, 36, 42, 48, 54, 60],indexs))
 
 
 
-def TSPresultsfastViz(n=18):
+def TSPresultsfastViz():
     s=.15
-    print("Montage Music")
-    sleep(.5)
+    print("Montage ")
+    sleep(.75)
     clear_output()
     sleep(.5)
    
@@ -374,20 +375,28 @@ def showfactorials():
             print(char, end='', flush=True)
            
 
-def theMainShow():
+def theMainShow(n):
+    '''
+    The n is the number of nodes to focus on 
+    '''
+
     slidebreaks()     
     showfactorials()
     slidebreaks()
     bigObigscale()   
     TSPresultsfastViz()
     slidebreaks()
-    TSPFocusedViz(n=18)
+    TSPFocusedViz(n)
     slidebreaks()
     print('\nThank you\n') 
 
 
 
 def slidebreaks():
+    '''
+    I used this a a few timnes it creates a prompt to proceed before moving on to the next portion.
+    
+    '''
     sleep(.5) 
  
     print('\n\n-[Press any key to proceed]-\n')
@@ -412,7 +421,7 @@ def slidebreaks():
 
 
 
-##### The real code #############
+##### The models code (genetic alg ) code #############
 
 
 
@@ -446,7 +455,7 @@ class City:
 
 
 
-
+##Wrangle
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -586,10 +595,11 @@ def nearoptimalcircuit(bestroute):
 
     
 
-# Each are working I will try to combine them
+
 def create_random_point(x0,y0,distance):
     """
-            Utility method for simulation of the points
+           This is how we generate our data for simulation of the points using codeup as our centeral location. The geopcord inates are random but based on a radious in kilometers
+           from a central point which is the lat and long of Code Up
     """   
     r = distance/(111139)
     u = np.random.uniform(0,1)
@@ -606,6 +616,11 @@ def create_random_point(x0,y0,distance):
 
 
 def latlonglist(n,show):
+    '''
+    
+    creates our intital locations this is how we aquire our data
+    
+    '''
     print (f"Our lat and longs: \n")    # a value approxiamtely less than 150 km 
     fig = plt.figure(figsize=(15,15))
     ax = host_subplot(111, axes_class=AA.Axes)
@@ -637,8 +652,7 @@ def latlonglist(n,show):
     return latlonglist
 
 
-    
-
+#this is how we evalute the fitness     
 class Fitness:
     def __init__(self, route):
         self.route = route
@@ -669,6 +683,11 @@ class Fitness:
 
 
 def createRoute(latlonglist):
+    '''
+    
+    this creats a random selection of potential permutations
+    
+    '''
     route = random.sample(latlonglist, len(latlonglist))
     return route
 
@@ -677,6 +696,15 @@ def createRoute(latlonglist):
 
 
 def initialPopulation(popSize, latlonglist):
+
+    '''
+    
+    
+    creates initial population of permuations. This is the base case from which the gentic alorithim starts. Afterwards it will swap using elites ranked by the fitness funtion
+    These elites pass on their sequence to the next generation by mating. Then then there is some mutation that happens. All of that happens in later functions
+    
+    
+    '''
     population = []
 
     for i in range(0, popSize):
@@ -692,8 +720,8 @@ def initialPopulation(popSize, latlonglist):
 
 def gendf(pop,n):
     '''
-    This function reads in zillow data from Codeup database, writes data to
-    a csv file if a local file does not exist, and returns a df.
+    This function reads data, writes data to
+    a csv file if a local file does not exist, and returns a df. It was created to gather information to do some stats testting
     '''
     if os.path.isfile(f'n_{n}pop.csv'):
         
@@ -716,6 +744,45 @@ def gendf(pop,n):
         df=pd.DataFrame(pop)
         df=df.T
         df.to_csv(f'n_{n}pop.csv')
+
+
+
+
+def bigdf(popRanked,n):
+    '''
+    This function reads data, writes data to
+    a csv file if a local file does not exist, and returns a df. It was created to gather information to do some stats testting
+    '''
+    if os.path.isfile(f'n_{n}big.csv'):
+        
+        # If csv file exists read in data from csv file.
+        df = pd.read_csv(f'n_{n}big.csv',index_col=0)
+       
+        popRanked=pd.DataFrame(popRanked)
+        if len(popRanked)==len(df):
+            cols=["Index"]
+            for i in range(1,(df.shape[1])):
+             cols.append(f"gen{i+1}" )
+            popRanked.columns=cols           
+            df.merge(popRanked,how='outer')
+            df.to_csv(f'n_{n}big.csv')
+        else:
+            for i in range(1,(df.shape[1])):
+             cols.append(f"gen{i+1}" )
+            popRanked.columns=cols  
+            # df.merge(popRanked,how='cross',on=['Index'])
+            df.merge(popRanked,how='outer')
+            df.to_csv(f'n_{n}big.csv')
+
+       
+        
+    else:
+        
+        df=pd.DataFrame(popRanked)
+        df=df
+        df.to_csv(f'n_{n}big.csv')
+    
+
     
         
         
@@ -735,11 +802,12 @@ def rankRoutes(population):
         fitnessResults[i] = Fitness(population[i]).routeFitness()
     return sorted(fitnessResults.items(), key = operator.itemgetter(1), reverse = True)
 
-def selection(popRanked, eliteSize):
+def selection(popRanked, eliteSize,n):
     selectionResults = []
     df = pd.DataFrame(np.array(popRanked), columns=["Index","Fitness"])
     df['cum_sum'] = df.Fitness.cumsum()
     df['cum_perc'] = 100*df.cum_sum/df.Fitness.sum()
+    bigdf(df,n)
     
     for i in range(0, eliteSize):
         selectionResults.append(popRanked[i][0])
@@ -827,9 +895,9 @@ def mutatePopulation(population, mutationRate):
 
 
 
-def nextGeneration(currentGen, eliteSize, mutationRate):
+def nextGeneration(currentGen, eliteSize, mutationRate,n):
     popRanked = rankRoutes(currentGen)
-    selectionResults = selection(popRanked, eliteSize)
+    selectionResults = selection(popRanked, eliteSize,n)
     matingpool = matingPool(currentGen, selectionResults)
     children = breedPopulation(matingpool, eliteSize)
     nextGeneration = mutatePopulation(children, mutationRate)
@@ -850,10 +918,11 @@ def nextGeneration(currentGen, eliteSize, mutationRate):
 
 def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations):
     pop = initialPopulation(popSize, population)
+    n=len(population)
     print("Initial distance: " + f'{(1 / rankRoutes(pop)[0][1]):.2g}')
     
     for i in range(0, generations):
-        pop = nextGeneration(pop, eliteSize, mutationRate)
+        pop = nextGeneration(pop, eliteSize, mutationRate,n)
     
     print("Final distance: " + f'{(1 / rankRoutes(pop)[0][1]):.2g}')
     bestRouteIndex = rankRoutes(pop)[0][0]
@@ -976,7 +1045,7 @@ def geneticAlgorithmProgressPlot(population,popSize, eliteSize, mutationRate, ge
     progress.append(1 / rankRoutes(pop)[0][1])
     
     for i in range(0, generations):
-        pop= nextGeneration(pop, eliteSize, mutationRate)
+        pop= nextGeneration(pop, eliteSize, mutationRate,n)
         gendf(pop,n)
         popdf.append(pop)
         progress.append(1 / rankRoutes(pop)[0][1])
@@ -1110,6 +1179,11 @@ def bestRoutedist(bestRoute,n):
 def popandbestcsv(n):
     df = pd.read_csv(f'n_{n}pop.csv', index_col=0)
     bestroute = pd.read_csv(f'n_{n}bestroute.csv', index_col=0)
+    # df=pd.concat( [df ,bestroute],axis=1)
+    # intfor=int(len(df))
+    # cols=[i for i in range(len(df.T))]
+    # df = pd.DataFrame('x', index=range(intfor), columns=cols)
+    
 
 
     dist=latlongstringtouppletoeucliddist(df)
@@ -1132,12 +1206,32 @@ def popandbestcsv(n):
     colnums=list(range(len(columns)))
     colmap=dict(zip(colnums,columns))
     statdf=df.rename(columns=colmap)
+    cols=[]
+    for i in range(0,(dist.shape[1])):
+        cols.append(f"gen{i+1}" )
+    dist.columns=cols
 
 
 
     comparesum=statdf['sum'].aggregate(['min','max','mean'])
-    return statdf,comparesum,bestroute
+    return statdf,comparesum,bestroute,dist
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def bestdist(best):
 
@@ -1169,9 +1263,107 @@ def bestdist(best):
 
 
 def focusedforreport(n):
-    stats,comp,bestroute=popandbestcsv(n)
+    stats,comp,bestroute,dist=popandbestcsv(n)
     TSPFocusedViz(n)
-    besd=latlongstringtouppletoeucliddist(bestroute)
-    # besd=bestdist(bestroute)
+    # besd=latlongstringtouppletoeucliddist(bestroute)
+    besd=bestdist(bestroute)
+    comp=pd.DataFrame(comp)
+    comp['diff%']=((comp['sum']-besd)/comp['sum'])*100
    
-    return stats,comp,besd
+    return stats, comp,besd,dist
+
+
+
+
+def looptoseeallbestvsminmaxmean():
+    listtoindex=list(range(3,12,1))
+    listtoadd=list(range(12,66,6))
+    listtoindex.extend(listtoadd)
+    compbigdf=pd.DataFrame()
+   
+    for i in listtoindex:
+        n=i
+        stats,comp,bestroute,dist=popandbestcsv(n)
+        # TSPFocusedViz(n)
+        # besd=latlongstringtouppletoeucliddist(bestroute)
+        besd=bestdist(bestroute)
+        comp=pd.DataFrame(comp)
+        comp['diff%']=((comp['sum']-besd)/comp['sum'])*100
+        compbigdf=pd.merge(left=compbigdf,right=comp,how='left',left_index=True,right_index=True,suffixes=[f'{n}',f'{n+1}'])
+
+
+   
+    return compbigdf
+
+
+##stats
+def genmeancomp(dist,a,b,alpha=.05):
+    '''
+    wecompare the distance generator by 100 different populations
+    
+    '''
+    colset=set(dist.columns)
+    twocombos=list(combinations(colset,2))
+    fig, axes = plt.subplots(1, 2, figsize=(15, 5), sharey=True)
+    fig.suptitle('Comp')
+
+   
+    
+   
+
+    
+
+
+    cola=dist[a]
+    colb=dist[b]
+    sns.histplot(ax=axes[0],data=cola,kde=True)
+    axes[0].set_title(a)
+    sns.histplot(ax=axes[1],data=colb,kde=True)
+    axes[1].set_title(b)
+    plt.show()
+    # g.add_legend(f'We compare:\n{str(i[0])} vs {str(i[1])}')
+  
+    t,p =stats.levene(cola,colb)
+    if p < alpha:
+        varequal=False
+    else:
+        varequal=True
+    
+
+
+    
+    t,p = stats.ttest_ind(cola, colb,equal_var=varequal)
+    nullsym=symbols('H_{0}')
+    rejnull=symbols('Reject~H_{0}~?')
+    null='The null hypothesis is that our populations are statistically the same.'
+
+    if p / 2 > alpha:
+        
+        equalpopstring=f'No, we observe that {a} and {b} are statistically the same:'
+        display(nullsym,null,rejnull)
+        print(f"{equalpopstring}\nHence, we fail to reject our null hypothesis\n\n")
+    elif t < 0:
+    
+        equalpopstring=f'No, we observe that {a} and {b} are statistically the same:'
+        display(nullsym,null,rejnull)
+        print(f"{equalpopstring}\nHence, we fail to reject our null hypothesis\n\n")
+    else:
+        
+        equalpopstring=f'Yes, we observe that {a} and {b} are statistically different'
+        display(nullsym,null,rejnull)
+        print(f"{equalpopstring}\nHence, we reject our null hypothesis\n\n")  
+
+def datadict(df):
+    x=(pd.concat([df.dtypes,df.nunique(),df.count(),df.isnull().sum(),df[df.isnull()==0].kurtosis()],axis=1))
+    type(x)
+    x=x.reset_index()
+    collist=x.columns.to_list()
+    columns=['name','data type','unique','total count','null count','non null kurt']
+    coldict=dict(zip(collist,columns))
+    x.rename(columns=coldict,inplace=True)
+    x.sort_values(by=['unique','total count','name'],inplace=True)
+    x=x.reset_index(drop=True)
+    x['percent null']=(x['null count']/ x['total count'])*100
+    
+   
+    return x
