@@ -1,7 +1,47 @@
-# Finding solutions to the "Traveling Salesman Problem" via the genetic algorithim.
+# Traveling Salesman Problem:
+## Solutions via the genetic algorithim.
 
+### -Richard Macken
 
-Richard Macken
+ <img alt="Richard" src="https://img.shields.io/github/followers/mackenr?label=Follow Rich&style=social" />
+<img alt="Example" src=Code_Up_TSP_Simulation_n24.png />
+
+---
+
+> Note: This an interactive notebook. In order to obtain the entire funcionality you will need to clone the repo, install dependances and run it. If you notice an unfamilar import you will need to install it via your package manager of choice.
+```py 
+from __future__ import division
+import string
+from itertools import chain
+import os
+import sys
+from time import sleep
+import numpy as np, random, operator, pandas as pd, matplotlib.pyplot as plt
+import matplotlib as mpl
+import plotly.graph_objects as go
+from IPython.display import Image,display, clear_output
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import host_subplot
+import mpl_toolkits.axisartist as AA
+from matplotlib import collections  as mc
+from itertools import permutations,combinations
+from matplotlib_scalebar.scalebar import ScaleBar
+import time
+import seaborn as sns
+from scipy.special import gamma
+import plotly.express as px
+import geopandas as gpd
+import shapely
+import numpy as np
+from sympy import symbols
+import wget
+from math import radians, cos, sin, asin, sqrt, factorial
+import scipy.stats as stats
+```
+
+---
+
 ---- 
 ## About:
 This was a base case to understand an algorithm that I had not used before. In this specific implementation it actually solves a simply stated but deceptively complex problem, which is to find the shortest path between n points on a map. A real world application could be an oil and gas company who wanted to find the optimal path to fly a drone to hit every construction site within a certain radius.
@@ -115,128 +155,6 @@ I also intend to use this algorithm to optimize staple machine learning models s
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Sample Data Dict of distances for n=36
-
-
-
-
-
-|    | name   | data type   |   unique |   total count |   null count |   non null kurt |   percent null |
-|---:|:-------|:------------|---------:|--------------:|-------------:|----------------:|---------------:|
-|  0 | gen1   | float64     |       35 |            35 |            0 |     -0.272591   |              0 |
-|  1 | gen10  | float64     |       35 |            35 |            0 |      0.109127   |              0 |
-|  2 | gen100 | float64     |       35 |            35 |            0 |     -1.23742    |              0 |
-|  3 | gen11  | float64     |       35 |            35 |            0 |     -0.739343   |              0 |
-|  4 | gen12  | float64     |       35 |            35 |            0 |     -0.215712   |              0 |
-|  5 | gen13  | float64     |       35 |            35 |            0 |     -0.575522   |              0 |
-|  6 | gen14  | float64     |       35 |            35 |            0 |     -1.27945    |              0 |
-|  7 | gen15  | float64     |       35 |            35 |            0 |     -0.707439   |              0 |
-|  8 | gen16  | float64     |       35 |            35 |            0 |      1.42488    |              0 |
-|  9 | gen17  | float64     |       35 |            35 |            0 |     -0.249124   |              0 |
-| 10 | gen18  | float64     |       35 |            35 |            0 |     -1.05624    |              0 |
-| 11 | gen19  | float64     |       35 |            35 |            0 |     -0.226803   |              0 |
-| 12 | gen2   | float64     |       35 |            35 |            0 |      0.0582615  |              0 |
-| 13 | gen20  | float64     |       35 |            35 |            0 |     -0.546488   |              0 |
-| 14 | gen21  | float64     |       35 |            35 |            0 |      0.413751   |              0 |
-| 15 | gen22  | float64     |       35 |            35 |            0 |      0.593468   |              0 |
-| 16 | gen23  | float64     |       35 |            35 |            0 |      0.616037   |              0 |
-| 17 | gen24  | float64     |       35 |            35 |            0 |      1.52429    |              0 |
-| 18 | gen25  | float64     |       35 |            35 |            0 |     -0.626885   |              0 |
-| 19 | gen26  | float64     |       35 |            35 |            0 |     -0.811789   |              0 |
-| 20 | gen27  | float64     |       35 |            35 |            0 |     -0.853763   |              0 |
-| 21 | gen28  | float64     |       35 |            35 |            0 |     -0.934949   |              0 |
-| 22 | gen29  | float64     |       35 |            35 |            0 |     -0.481825   |              0 |
-| 23 | gen3   | float64     |       35 |            35 |            0 |     -0.00411132 |              0 |
-| 24 | gen30  | float64     |       35 |            35 |            0 |     -0.0493086  |              0 |
-| 25 | gen31  | float64     |       35 |            35 |            0 |     -0.442681   |              0 |
-| 26 | gen32  | float64     |       35 |            35 |            0 |     -0.186921   |              0 |
-| 27 | gen33  | float64     |       35 |            35 |            0 |      0.310077   |              0 |
-| 28 | gen34  | float64     |       35 |            35 |            0 |     -0.179506   |              0 |
-| 29 | gen35  | float64     |       35 |            35 |            0 |     -0.173806   |              0 |
-| 30 | gen36  | float64     |       35 |            35 |            0 |     -0.49656    |              0 |
-| 31 | gen37  | float64     |       35 |            35 |            0 |     -0.959493   |              0 |
-| 32 | gen38  | float64     |       35 |            35 |            0 |     -0.524657   |              0 |
-| 33 | gen39  | float64     |       35 |            35 |            0 |     -0.687915   |              0 |
-| 34 | gen4   | float64     |       35 |            35 |            0 |      0.0584625  |              0 |
-| 35 | gen40  | float64     |       35 |            35 |            0 |     -0.589521   |              0 |
-| 36 | gen41  | float64     |       35 |            35 |            0 |     -0.666479   |              0 |
-| 37 | gen42  | float64     |       35 |            35 |            0 |     -0.235298   |              0 |
-| 38 | gen43  | float64     |       35 |            35 |            0 |     -0.121617   |              0 |
-| 39 | gen44  | float64     |       35 |            35 |            0 |     -0.701615   |              0 |
-| 40 | gen45  | float64     |       35 |            35 |            0 |      0.00920138 |              0 |
-| 41 | gen46  | float64     |       35 |            35 |            0 |     -0.284496   |              0 |
-| 42 | gen47  | float64     |       35 |            35 |            0 |      0.144852   |              0 |
-| 43 | gen48  | float64     |       35 |            35 |            0 |     -0.688837   |              0 |
-| 44 | gen49  | float64     |       35 |            35 |            0 |     -0.506081   |              0 |
-| 45 | gen5   | float64     |       35 |            35 |            0 |     -0.39513    |              0 |
-| 46 | gen50  | float64     |       35 |            35 |            0 |      0.0474278  |              0 |
-| 47 | gen51  | float64     |       35 |            35 |            0 |      0.16536    |              0 |
-| 48 | gen52  | float64     |       35 |            35 |            0 |     -0.919171   |              0 |
-| 49 | gen53  | float64     |       35 |            35 |            0 |     -0.290371   |              0 |
-| 50 | gen54  | float64     |       35 |            35 |            0 |     -0.715303   |              0 |
-| 51 | gen55  | float64     |       35 |            35 |            0 |      0.764635   |              0 |
-| 52 | gen56  | float64     |       35 |            35 |            0 |     -0.770931   |              0 |
-| 53 | gen57  | float64     |       35 |            35 |            0 |     -0.98007    |              0 |
-| 54 | gen58  | float64     |       35 |            35 |            0 |     -0.538229   |              0 |
-| 55 | gen59  | float64     |       35 |            35 |            0 |     -0.146443   |              0 |
-| 56 | gen6   | float64     |       35 |            35 |            0 |     -0.424892   |              0 |
-| 57 | gen60  | float64     |       35 |            35 |            0 |     -0.0173834  |              0 |
-| 58 | gen61  | float64     |       35 |            35 |            0 |     -0.339321   |              0 |
-| 59 | gen62  | float64     |       35 |            35 |            0 |     -0.309626   |              0 |
-| 60 | gen63  | float64     |       35 |            35 |            0 |     -1.36806    |              0 |
-| 61 | gen64  | float64     |       35 |            35 |            0 |     -0.972132   |              0 |
-| 62 | gen65  | float64     |       35 |            35 |            0 |     -0.243613   |              0 |
-| 63 | gen66  | float64     |       35 |            35 |            0 |     -0.460656   |              0 |
-| 64 | gen67  | float64     |       35 |            35 |            0 |     -0.0375774  |              0 |
-| 65 | gen68  | float64     |       35 |            35 |            0 |     -0.275685   |              0 |
-| 66 | gen69  | float64     |       35 |            35 |            0 |     -0.746702   |              0 |
-| 67 | gen7   | float64     |       35 |            35 |            0 |      0.407866   |              0 |
-| 68 | gen70  | float64     |       35 |            35 |            0 |     -0.243473   |              0 |
-| 69 | gen71  | float64     |       35 |            35 |            0 |     -0.862587   |              0 |
-| 70 | gen72  | float64     |       35 |            35 |            0 |     -0.25941    |              0 |
-| 71 | gen73  | float64     |       35 |            35 |            0 |     -0.849819   |              0 |
-| 72 | gen74  | float64     |       35 |            35 |            0 |     -0.517049   |              0 |
-| 73 | gen75  | float64     |       35 |            35 |            0 |     -0.566755   |              0 |
-| 74 | gen76  | float64     |       35 |            35 |            0 |     -1.14403    |              0 |
-| 75 | gen77  | float64     |       35 |            35 |            0 |     -0.49474    |              0 |
-| 76 | gen78  | float64     |       35 |            35 |            0 |     -0.574293   |              0 |
-| 77 | gen79  | float64     |       35 |            35 |            0 |     -0.146946   |              0 |
-| 78 | gen8   | float64     |       35 |            35 |            0 |     -0.113747   |              0 |
-| 79 | gen80  | float64     |       35 |            35 |            0 |      0.0270132  |              0 |
-| 80 | gen81  | float64     |       35 |            35 |            0 |     -0.572362   |              0 |
-| 81 | gen82  | float64     |       35 |            35 |            0 |     -0.223018   |              0 |
-| 82 | gen83  | float64     |       35 |            35 |            0 |     -0.266947   |              0 |
-| 83 | gen84  | float64     |       35 |            35 |            0 |     -1.06077    |              0 |
-| 84 | gen85  | float64     |       35 |            35 |            0 |     -0.440283   |              0 |
-| 85 | gen86  | float64     |       35 |            35 |            0 |     -0.834024   |              0 |
-| 86 | gen87  | float64     |       35 |            35 |            0 |     -0.314972   |              0 |
-| 87 | gen88  | float64     |       35 |            35 |            0 |     -0.397636   |              0 |
-| 88 | gen89  | float64     |       35 |            35 |            0 |     -0.423457   |              0 |
-| 89 | gen9   | float64     |       35 |            35 |            0 |     -0.510499   |              0 |
-| 90 | gen90  | float64     |       35 |            35 |            0 |     -1.22258    |              0 |
-| 91 | gen91  | float64     |       35 |            35 |            0 |      0.318598   |              0 |
-| 92 | gen92  | float64     |       35 |            35 |            0 |     -0.744748   |              0 |
-| 93 | gen93  | float64     |       35 |            35 |            0 |     -0.588594   |              0 |
-| 94 | gen94  | float64     |       35 |            35 |            0 |     -0.628682   |              0 |
-| 95 | gen95  | float64     |       35 |            35 |            0 |     -0.77224    |              0 |
-| 96 | gen96  | float64     |       35 |            35 |            0 |      1.33999    |              0 |
-| 97 | gen97  | float64     |       35 |            35 |            0 |     -0.464738   |              0 |
-| 98 | gen98  | float64     |       35 |            35 |            0 |     -0.723187   |              0 |
-| 99 | gen99  | float64     |       35 |            35 |            0 |     -1.066      |              0 |
 
 
 

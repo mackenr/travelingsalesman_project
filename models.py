@@ -1353,6 +1353,10 @@ def genmeancomp(dist,a,b,alpha=.05):
         display(nullsym,null,rejnull)
         print(f"{equalpopstring}\nHence, we reject our null hypothesis\n\n")  
 
+
+
+
+
 def datadict(df):
     x=(pd.concat([df.dtypes,df.nunique(),df.count(),df.isnull().sum(),df[df.isnull()==0].kurtosis()],axis=1))
     type(x)
